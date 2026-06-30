@@ -33,7 +33,7 @@ export async function loadFrames(onProgress) {
   async function worker() {
     while (pos < frameNums.length) {
       const i = pos++;
-      const url = `public/sequencia/frame-${pad4(frameNums[i])}.webp`;
+      const url = `sequencia/frame-${pad4(frameNums[i])}.webp`;
       const res = await fetch(url);
       const blob = await res.blob();
       bitmaps[i] = await createImageBitmap(blob);
