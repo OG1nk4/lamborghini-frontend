@@ -6,19 +6,40 @@ export function initScrollSequence(bitmaps) {
 
   let currentFrame = 0;
 
+  // Em telas estreitas/portrait, "cover" cortaria a maior parte da largura
+  // do vídeo (fonte 16:9). Acima de um limiar de corte, trocamos para um
+  // "contain" ancorado no topo: mostra o frame inteiro, sem cortar, e
+  // deixa espaço livre embaixo para o texto não brigar com a imagem.
+  const MAX_CROP_RATIO = 1.6;
+
   function drawFrame(index) {
     const bmp = bitmaps[Math.max(0, Math.min(index, bitmaps.length - 1))];
     if (!bmp) return;
 
     const cw = canvas.width;
     const ch = canvas.height;
-    const scale = Math.max(cw / bmp.width, ch / bmp.height);
+    const coverScale   = Math.max(cw / bmp.width, ch / bmp.height);
+    const containScale = Math.min(cw / bmp.width, ch / bmp.height);
+    const cropRatio = coverScale / containScale;
+
+    let scale, sx, sy;
+    if (cropRatio > MAX_CROP_RATIO) {
+      // contain, ancorado no topo
+      scale = containScale;
+      sx = (cw - bmp.width * scale) / 2;
+      sy = 0;
+    } else {
+      // cover, centralizado (comportamento desktop/tablet padrão)
+      scale = coverScale;
+      sx = (cw - bmp.width * scale) / 2;
+      sy = (ch - bmp.height * scale) / 2;
+    }
+
     const sw = bmp.width  * scale;
     const sh = bmp.height * scale;
-    const sx = (cw - sw) / 2;
-    const sy = (ch - sh) / 2;
 
-    ctx.clearRect(0, 0, cw, ch);
+    ctx.fillStyle = '#060606';
+    ctx.fillRect(0, 0, cw, ch);
     ctx.drawImage(bmp, sx, sy, sw, sh);
   }
 

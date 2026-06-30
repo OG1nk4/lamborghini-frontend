@@ -46,7 +46,22 @@
       <li><a href="#">Concessionárias</a></li>
     </ul>
     <button type="button" class="nav-cta">Solicitar Brochura</button>
+    <button type="button" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- MOBILE NAV DRAWER -->
+  <div id="nav-mobile" aria-hidden="true">
+    <ul class="nav-mobile-ul">
+      <li><a href="#">O Carro</a></li>
+      <li><a href="#">Tecnologia</a></li>
+      <li><a href="#">Galeria</a></li>
+      <li><a href="#">Configurar</a></li>
+      <li><a href="#">Concessionárias</a></li>
+    </ul>
+    <button type="button" class="nav-cta nav-cta-mobile">Solicitar Brochura</button>
+  </div>
 
   <main>
 
@@ -194,7 +209,9 @@
   <script type="module" src="main.js"></script>
   <script type="module">
     import { initGallery } from './gallery.js';
+    import { initMobileNav } from './nav-mobile.js';
     initGallery();
+    initMobileNav();
   </script>
 </body>
 </html>

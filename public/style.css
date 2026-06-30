@@ -108,6 +108,66 @@ body {
 .nav-cta { background: none; border: 1px solid var(--ac); color: var(--ac); font-family: 'DM Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; padding: 10px 22px; cursor: pointer; transition: all 0.25s; }
 .nav-cta:hover { background: var(--ac); color: #000; }
 
+/* Hamburger toggle — hidden by default, shown only on mobile */
+#nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 210;
+}
+#nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--tx);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+#nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+#nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+#nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile nav drawer */
+#nav-mobile {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
+#nav-mobile.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
+}
+.nav-mobile-ul { list-style: none; display: flex; flex-direction: column; align-items: center; gap: 28px; }
+.nav-mobile-ul a {
+  color: var(--tx);
+  text-decoration: none;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-mobile-ul a:hover, .nav-mobile-ul a:focus-visible { color: var(--ac); }
+.nav-cta-mobile { padding: 14px 32px; }
+body.nav-open { overflow: hidden; }
+
 /* ── HERO SCROLL SEQUENCE ── */
 #hero-section {
   height: 600vh;
@@ -286,7 +346,8 @@ body {
 
 @media (max-width: 768px) {
   .nav { padding: 16px 24px; }
-  .nav-ul, .nav-cta { display: none; }
+  .nav-ul, .nav > .nav-cta { display: none; }
+  #nav-toggle { display: flex; }
   #hero-overlay { left: 24px; right: 16px; bottom: 58px; }
   .fh { font-size: clamp(48px, 13vw, 68px); }
   .s-specs, .s-gal, .s-cta { padding: 80px 24px; }
