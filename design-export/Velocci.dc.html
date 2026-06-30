@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060606;--sf:#101010;--sf2:#161616;--ac:#C8922A;--acl:rgba(200,146,42,0.12);--tx:#F0EDE6;--txd:rgba(240,237,230,0.5);--txm:rgba(240,237,230,0.22)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+.bb{font-family:'Bebas Neue',sans-serif}
+.mn{font-family:'DM Mono',monospace}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:22px 52px;background:linear-gradient(to bottom,rgba(6,6,6,0.92) 0%,transparent 100%)}
+.nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.2em;color:var(--tx)}
+.nav-ul{display:flex;gap:36px;list-style:none}
+.nav-ul a{color:var(--txd);text-decoration:none;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;transition:color 0.25s}
+.nav-ul a:hover{color:var(--ac)}
+.nav-cta{background:none;border:1px solid var(--ac);color:var(--ac);font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:0.22em;text-transform:uppercase;padding:10px 22px;cursor:pointer;transition:all 0.25s}
+.nav-cta:hover{background:var(--ac);color:#000}
+/* STORYBOARD */
+.frame{position:relative;width:100%;height:100svh;min-height:640px;overflow:hidden;display:flex}
+.frame::after{content:'';position:absolute;inset:0;z-index:3;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(0,0,0,0.025) 3px,rgba(0,0,0,0.025) 4px);pointer-events:none}
+.f1bg{background:#030303}
+.f2bg{background:radial-gradient(ellipse 70% 55% at 54% 62%,#131313,#040404)}
+.f3bg{background:radial-gradient(circle at 48% 52%,#151515,#040404)}
+.f4bg{background:radial-gradient(ellipse 90% 70% at 50% 44%,#131313,#030303)}
+.f5bg{background:radial-gradient(ellipse 65% 90% at 50% 55%,#151515,#030303)}
+.f6bg{background:radial-gradient(ellipse 55% 18% at 50% 100%,rgba(200,146,42,0.09),transparent),radial-gradient(ellipse 78% 58% at 50% 68%,#1c1c1c,#090909 44%,#020202)}
+.fbg{position:absolute;inset:0;z-index:0}
+/* Frame label */
+.flbl{position:absolute;top:92px;left:52px;z-index:30;display:flex;align-items:center;gap:12px}
+.flbl-n{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--ac);letter-spacing:0.22em;border:1px solid rgba(200,146,42,0.3);background:rgba(200,146,42,0.07);padding:4px 12px}
+.flbl-h{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--txm);letter-spacing:0.18em;text-transform:uppercase}
+/* Car containers */
+.fcar{position:absolute;inset:0;z-index:5;display:flex;align-items:flex-end;justify-content:center;padding-bottom:88px}
+.fcar-det{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center}
+.fcar-f1{width:24%;opacity:0.28}
+.fcar-f2{width:80%;opacity:0.66}
+.fcar-f6{width:96%;opacity:1}
+.fcar-wh{width:50%;opacity:0.88}
+.fcar-eg{width:64%;opacity:0.78}
+.fcar-it{width:68%;opacity:0.82}
+/* Frame text bottom-left */
+.ftxt{position:absolute;bottom:78px;left:52px;right:50%;z-index:20}
+.ey{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--ac);letter-spacing:0.28em;text-transform:uppercase;margin-bottom:14px;display:block}
+.acl{width:34px;height:1px;background:var(--ac);margin-bottom:18px}
+.fh{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,7.5vw,108px);line-height:0.9;color:var(--tx);letter-spacing:0.02em;margin-bottom:18px}
+.fh .ac{color:var(--ac)}
+.fb{font-size:13px;color:var(--txd);line-height:1.78;max-width:340px;font-weight:300;letter-spacing:0.01em}
+/* Frame 5 stat overlay */
+.fstat{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.fstat-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--txd);letter-spacing:0.32em;text-transform:uppercase;margin-bottom:4px}
+.fstat-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(130px,20vw,260px);color:var(--ac);line-height:0.88}
+.fstat-sub{font-size:13px;color:var(--txm);letter-spacing:0.14em;font-weight:300;margin-top:8px}
+/* Frame 6 bottom overlay */
+.ftxt6{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;padding:0 52px 76px}
+.brev{font-family:'Bebas Neue',sans-serif;font-size:clamp(86px,12vw,168px);color:var(--tx);letter-spacing:0.08em;line-height:1;margin-bottom:4px}
+.brev-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--txm);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:24px}
+.f6stats{display:flex;gap:36px;margin-bottom:30px;flex-wrap:wrap}
+.f6sv{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--tx);line-height:1}
+.f6sv .u{color:var(--ac);font-size:20px}
+.f6sl{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--txm);letter-spacing:0.22em;text-transform:uppercase;margin-top:3px}
+.f6cta{display:flex;gap:14px;flex-wrap:wrap}
+/* Buttons */
+.btn-p{background:var(--ac);color:#000;font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:0.22em;text-transform:uppercase;padding:15px 34px;border:none;cursor:pointer;font-weight:500;transition:background 0.2s}
+.btn-p:hover{background:#d9a030}
+.btn-g{background:none;border:1px solid rgba(255,255,255,0.16);color:var(--txd);font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:0.22em;text-transform:uppercase;padding:15px 34px;cursor:pointer;transition:all 0.2s}
+.btn-g:hover{border-color:var(--ac);color:var(--ac)}
+/* Scroll hint */
+.shint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:30;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.38}
+.shint span{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:0.24em;text-transform:uppercase;color:var(--txm)}
+.sbar{width:1px;height:36px;background:linear-gradient(to bottom,var(--ac),transparent);animation:spls 2.4s ease infinite}
+@keyframes spls{0%,100%{opacity:0.3;transform:scaleY(0.5) translateY(-8px)}55%{opacity:1;transform:scaleY(1) translateY(0)}}
+/* Frame separator */
+.fsep{height:1px;background:linear-gradient(to right,transparent,rgba(200,146,42,0.18),transparent)}
+/* SPECS SECTION */
+.s-specs{padding:116px 52px;background:var(--sf)}
+.s-hdr{margin-bottom:68px}
+.s-ey{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--ac);letter-spacing:0.32em;text-transform:uppercase;margin-bottom:14px}
+.s-ti{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,5.8vw,74px);color:var(--tx);letter-spacing:0.02em;line-height:1}
+.sbig-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.04);margin-bottom:2px}
+.scard{background:var(--sf);padding:36px 28px;position:relative;overflow:hidden;transition:background 0.3s}
+.scard::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac);transform:scaleX(0);transition:transform 0.4s;transform-origin:left}
+.scard:hover{background:var(--sf2)}
+.scard:hover::after{transform:scaleX(1)}
+.scard-val{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--tx);line-height:1;margin-bottom:6px}
+.scard-unit{color:var(--ac);font-size:22px}
+.scard-lbl{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--txm);letter-spacing:0.22em;text-transform:uppercase;margin-bottom:8px}
+.scard-desc{font-size:11.5px;color:var(--txd);line-height:1.55;font-style:italic;margin-top:10px}
+.stbl{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.05)}
+.stbl-row{background:var(--sf);padding:15px 20px;display:flex;justify-content:space-between;align-items:baseline}
+.stbl-k{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--txm);letter-spacing:0.15em;text-transform:uppercase}
+.stbl-v{font-size:12.5px;color:var(--tx);font-weight:500;letter-spacing:0.05em}
+/* GALLERY */
+.s-gal{padding:116px 52px}
+.gal-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:340px 230px;gap:4px;margin-top:62px}
+.gal-item{overflow:hidden;position:relative;background:var(--sf2);cursor:pointer}
+.gal-item:first-child{grid-row:1/3}
+.gal-ph{position:absolute;inset:0;background-color:#0e0e0e;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.04) 0,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 8px);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px}
+.gal-ico{opacity:0.18}
+.gal-lbl{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--txm);letter-spacing:0.2em;text-align:center;text-transform:uppercase;line-height:1.6}
+.gal-ov{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;background:linear-gradient(to top,rgba(0,0,0,0.75),transparent);font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--txd);opacity:0;transform:translateY(4px);transition:all 0.3s}
+.gal-item:hover .gal-ov{opacity:1;transform:translateY(0)}
+/* CTA */
+.s-cta{padding:128px 52px;background:linear-gradient(148deg,var(--sf) 0%,var(--bg) 100%);position:relative;overflow:hidden}
+.s-cta::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,0.012) 0,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 4px),repeating-linear-gradient(-45deg,rgba(255,255,255,0.012) 0,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 4px);pointer-events:none}
+.cta-in{position:relative;z-index:1;max-width:760px}
+.cta-ti{font-family:'Bebas Neue',sans-serif;font-size:clamp(58px,8vw,108px);color:var(--tx);line-height:0.9;letter-spacing:0.02em;margin-bottom:22px}
+.cta-ti .ac{color:var(--ac)}
+.cta-bd{font-size:14px;color:var(--txd);line-height:1.9;max-width:500px;margin-bottom:42px;font-weight:300}
+.cta-acts{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:26px;align-items:center}
+.cta-note{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--txm);letter-spacing:0.15em}
+/* FOOTER */
+.footer{padding:64px 52px 40px;border-top:1px solid rgba(255,255,255,0.045)}
+.ft-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:52px}
+.ft-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.2em;color:var(--tx);display:block;margin-bottom:10px}
+.ft-sl{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--txm);letter-spacing:0.22em;text-transform:uppercase}
+.ft-links{display:flex;gap:52px}
+.ft-col-ti{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--ac);letter-spacing:0.24em;text-transform:uppercase;margin-bottom:14px}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ft-col a{color:var(--txd);text-decoration:none;font-size:12px;letter-spacing:0.06em;transition:color 0.2s}
+.ft-col a:hover{color:var(--tx)}
+.ft-bot{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid rgba(255,255,255,0.04)}
+.ft-copy{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--txm);letter-spacing:0.14em}
+.ft-legal{display:flex;gap:20px}
+.ft-legal a{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--txm);letter-spacing:0.12em;text-decoration:none;transition:color 0.2s}
+.ft-legal a:hover{color:var(--txd)}
+/* RESPONSIVE */
+@media(max-width:900px){.sbig-grid{grid-template-columns:1fr 1fr}.stbl{grid-template-columns:1fr}.gal-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}.gal-item{height:200px}.gal-item:first-child{grid-row:auto;height:260px}}
+@media(max-width:768px){.nav{padding:16px 24px}.nav-ul,.nav-cta{display:none}.flbl{left:24px;top:70px}.ftxt{left:24px;right:16px;bottom:58px}.fcar{padding-bottom:58px}.fcar-f1{width:58%}.fcar-f2{width:95%}.fcar-f6{width:95%}.fcar-wh{width:80%}.fcar-eg{width:90%}.fcar-it{width:92%}.fh{font-size:clamp(48px,13vw,68px)}.f6stats{gap:20px}.ftxt6{padding:0 24px 56px}.s-specs,.s-gal,.s-cta{padding:80px 24px}.footer{padding:48px 24px 32px}.ft-top{flex-direction:column;gap:36px}.ft-links{gap:26px;flex-wrap:wrap}.ft-bot{flex-direction:column;gap:12px}}
+</style>
+</helmet>
+<!-- NAV -->
+<nav class="nav">
+<a class="nav-brand" href="#">
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<polygon points="11,1 21,20 1,20" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+<polygon points="11,7 17,18 5,18" fill="rgba(200,146,42,0.18)"/>
+</svg>
+<span class="nav-logo">VELOCCI</span>
+</a>
+<ul class="nav-ul">
+<li><a href="#">O Carro</a></li>
+<li><a href="#">Tecnologia</a></li>
+<li><a href="#">Galeria</a></li>
+<li><a href="#">Configurar</a></li>
+<li><a href="#">Concessionárias</a></li>
+</ul>
+<button class="nav-cta">Solicitar Brochura</button>
+</nav>
+
+<!-- STORYBOARD HERO -->
+<section data-screen-label="Storyboard Hero">
+
+<!-- ═══════════════════════════════════════ FRAME 1 -->
+<div class="frame" data-screen-label="Frame 1 — Escuro · câmera longa">
+<div class="fbg f1bg"></div>
+<div class="flbl">
+<span class="flbl-n">FRAME 01 / 06</span>
+<span class="flbl-h">Câmera longa · carro no escuro</span>
+</div>
+<div class="fcar">
+<div class="fcar-f1" dangerouslySetInnerHTML="{{ carF1 }}"></div>
+</div>
+<div class="ftxt">
+<span class="ey">Velocci · GX-12 Corsa</span>
+<div class="acl"></div>
+<h2 class="fh">Engenharia<br>Sem Limites</h2>
+<p class="fb">Onde a física encontra a arte. Criado nos ateliês de Maranello Moderna, projetado para redefinir o que um hipercarro pode ser.</p>
+</div>
+<div class="shint">
+<span>Rolar para revelar</span>
+<div class="sbar"></div>
+</div>
+</div>
+<div class="fsep"></div>
+
+<!-- ═══════════════════════════════════════ FRAME 2 -->
+<div class="frame" data-screen-label="Frame 2 — Perfil · câmera aproxima">
+<div class="fbg f2bg"></div>
+<div class="flbl">
+<span class="flbl-n">FRAME 02 / 06</span>
+<span class="flbl-h">Câmera aproxima · perfil lateral</span>
+</div>
+<div class="fcar">
+<div class="fcar-f2" dangerouslySetInnerHTML="{{ carF2 }}"></div>
+</div>
+<div class="ftxt">
+<span class="ey">Design Exterior</span>
+<div class="acl"></div>
+<h2 class="fh">Nascido<br>Para a Pista</h2>
+<p class="fb">Cada linha com propósito aerodinâmico. Cada ângulo, uma declaração de força. O perfil GX-12 não é apenas belo — é implacável.</p>
+</div>
+</div>
+<div class="fsep"></div>
+
+<!-- ═══════════════════════════════════════ FRAME 3 -->
+<div class="frame" data-screen-label="Frame 3 — Roda e pinça de freio">
+<div class="fbg f3bg"></div>
+<div class="flbl">
+<span class="flbl-n">FRAME 03 / 06</span>
+<span class="flbl-h">Close · roda e pinça de freio</span>
+</div>
+<div class="fcar-det">
+<div class="fcar-wh" dangerouslySetInnerHTML="{{ wheel }}"></div>
+</div>
+<div class="ftxt">
+<span class="ey">Chassis &amp; Rodas</span>
+<div class="acl"></div>
+<h2 class="fh">Precisão<br>Sem Trégua</h2>
+<p class="fb">Rodas forjadas em magnésio de 21". Freios de carbono-cerâmica com pinças monobloco anodizadas. Parar mais rápido é tão essencial quanto acelerar.</p>
+</div>
+</div>
+<div class="fsep"></div>
+
+<!-- ═══════════════════════════════════════ FRAME 4 -->
+<div class="frame" data-screen-label="Frame 4 — V12 Biturbo">
+<div class="fbg f4bg"></div>
+<div class="flbl">
+<span class="flbl-n">FRAME 04 / 06</span>
+<span class="flbl-h">Close · V12 Biturbo 6.5L</span>
+</div>
+<div class="fcar-det">
+<div class="fcar-eg" dangerouslySetInnerHTML="{{ engine }}"></div>
+</div>
+<div class="ftxt">
+<span class="ey">Motorização</span>
+<div class="acl"></div>
+<h2 class="fh">V12 Biturbo.<br><span class="ac">1.200 CV.</span></h2>
+<p class="fb">6,5 litros de engenharia italiana. Bloco em alumínio de alta resistência, válvulas em titânio. Torque máximo a 3.200 rpm.</p>
+</div>
+</div>
+<div class="fsep"></div>
+
+<!-- ═══════════════════════════════════════ FRAME 5 -->
+<div class="frame" data-screen-label="Frame 5 — Interior · 0 a 100 km/h">
+<div class="fbg f5bg"></div>
+<div class="flbl">
+<span class="flbl-n">FRAME 05 / 06</span>
+<span class="flbl-h">Interior · cockpit esportivo</span>
+</div>
+<div class="fcar-det">
+<div class="fcar-it" dangerouslySetInnerHTML="{{ interior }}"></div>
+</div>
+<div class="fstat">
+<span class="fstat-lbl">0 a 100 km/h</span>
+<div class="fstat-big">2,8s</div>
+<span class="fstat-sub">O tempo de reação do piloto é o único limite.</span>
+</div>
+</div>
+<div class="fsep"></div>
+
+<!-- ═══════════════════════════════════════ FRAME 6 -->
+<div class="frame" data-screen-label="Frame 6 — Revelação total">
+<div class="fbg f6bg"></div>
+<div class="flbl">
+<span class="flbl-n">FRAME 06 / 06</span>
+<span class="flbl-h">Revelação total · plano final</span>
+</div>
+<div class="fcar">
+<div class="fcar-f6" dangerouslySetInnerHTML="{{ carF6 }}"></div>
+</div>
+<div class="ftxt6">
+<h1 class="brev">VELOCCI</h1>
+<p class="brev-sub">GX-12 Corsa · Edição Limitada · 88 Unidades</p>
+<div class="f6stats">
+<div><div class="f6sv">1.200<span class="u"> CV</span></div><div class="f6sl">Potência</div></div>
+<div><div class="f6sv">2,8<span class="u"> s</span></div><div class="f6sl">0 – 100 km/h</div></div>
+<div><div class="f6sv">385<span class="u"> km/h</span></div><div class="f6sl">Vel. Máxima</div></div>
+<div><div class="f6sv">V12<span class="u"> 6.5L</span></div><div class="f6sl">Motor</div></div>
+</div>
+<div class="f6cta">
+<button class="btn-p">Configure o Seu</button>
+<button class="btn-g">Saiba Mais</button>
+</div>
+</div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════ SPECS -->
+<section class="s-specs" data-screen-label="Especificações Técnicas">
+<div class="s-hdr">
+<p class="s-ey">Ficha Técnica</p>
+<h2 class="s-ti">Performance<br>sem Compromisso</h2>
+</div>
+<div class="sbig-grid">
+<div class="scard">
+<p class="scard-lbl">Potência máxima</p>
+<div class="scard-val">1.200<span class="scard-unit"> CV</span></div>
+<p class="scard-desc">a 8.500 rpm · modo Corsa Track</p>
+</div>
+<div class="scard">
+<p class="scard-lbl">0 a 100 km/h</p>
+<div class="scard-val">2,8<span class="scard-unit"> s</span></div>
+<p class="scard-desc">Lançamento a partir de 3.200 rpm</p>
+</div>
+<div class="scard">
+<p class="scard-lbl">Velocidade máxima</p>
+<div class="scard-val">385<span class="scard-unit"> km/h</span></div>
+<p class="scard-desc">Limitada eletronicamente · pneus Pirelli P Zero Corsa</p>
+</div>
+<div class="scard">
+<p class="scard-lbl">Relação peso/potência</p>
+<div class="scard-val">0,84<span class="scard-unit"> CV/kg</span></div>
+<p class="scard-desc">Peso a seco: 1.430 kg · monocoque em carbono</p>
+</div>
+</div>
+<div class="stbl">
+<div class="stbl-row"><span class="stbl-k">Motor</span><span class="stbl-v">V12 Biturbo 6.5L DOHC</span></div>
+<div class="stbl-row"><span class="stbl-k">Torque</span><span class="stbl-v">1.150 Nm a 3.200 rpm</span></div>
+<div class="stbl-row"><span class="stbl-k">Câmbio</span><span class="stbl-v">7 velocidades DCT</span></div>
+<div class="stbl-row"><span class="stbl-k">Tração</span><span class="stbl-v">AWD — Torque Vectoring</span></div>
+<div class="stbl-row"><span class="stbl-k">Suspensão</span><span class="stbl-v">Duplo A-arm · magnético adaptativo</span></div>
+<div class="stbl-row"><span class="stbl-k">Freios dianteiros</span><span class="stbl-v">CC 410 mm · pinça monobloco 8p</span></div>
+<div class="stbl-row"><span class="stbl-k">Estrutura</span><span class="stbl-v">Monocoque em fibra de carbono</span></div>
+<div class="stbl-row"><span class="stbl-k">Aerodinâmica</span><span class="stbl-v">Ativo adaptativo · até 680 kg downforce</span></div>
+<div class="stbl-row"><span class="stbl-k">Rodas dianteiras</span><span class="stbl-v">20" magnésio forjado</span></div>
+<div class="stbl-row"><span class="stbl-k">Rodas traseiras</span><span class="stbl-v">21" magnésio forjado</span></div>
+<div class="stbl-row"><span class="stbl-k">Comprimento</span><span class="stbl-v">4.612 mm</span></div>
+<div class="stbl-row"><span class="stbl-k">Produção</span><span class="stbl-v">88 unidades · numeradas</span></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ GALLERY -->
+<section class="s-gal" data-screen-label="Galeria">
+<div class="s-hdr">
+<p class="s-ey">Galeria</p>
+<h2 class="s-ti">Cada Ângulo,<br>Uma Obra</h2>
+</div>
+<div class="gal-grid">
+<div class="gal-item">
+<div class="gal-ph">
+<svg class="gal-ico" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(240,237,230,0.8)" stroke-width="1" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="rgba(240,237,230,0.8)"/><path d="M21 15l-5-5L5 21"/></svg>
+<span class="gal-lbl">Vista Exterior<br>Frontal 3/4</span>
+</div>
+<div class="gal-ov">Exterior · Frente 3/4 — Iluminação de Estúdio</div>
+</div>
+<div class="gal-item">
+<div class="gal-ph">
+<svg class="gal-ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(240,237,230,0.8)" stroke-width="1" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="rgba(240,237,230,0.8)"/><path d="M21 15l-5-5L5 21"/></svg>
+<span class="gal-lbl">Interior<br>Cockpit Esportivo</span>
+</div>
+<div class="gal-ov">Interior · Cockpit Driver-Focused</div>
+</div>
+<div class="gal-item">
+<div class="gal-ph">
+<svg class="gal-ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(240,237,230,0.8)" stroke-width="1" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="rgba(240,237,230,0.8)"/><path d="M21 15l-5-5L5 21"/></svg>
+<span class="gal-lbl">Roda &amp; Pinça<br>de Freio</span>
+</div>
+<div class="gal-ov">Detalhe · Roda Magnésio + Pinça CC</div>
+</div>
+<div class="gal-item">
+<div class="gal-ph">
+<svg class="gal-ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(240,237,230,0.8)" stroke-width="1" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="rgba(240,237,230,0.8)"/><path d="M21 15l-5-5L5 21"/></svg>
+<span class="gal-lbl">Vista Traseira<br>Difusor &amp; Asa</span>
+</div>
+<div class="gal-ov">Exterior · Traseira — Difusor Ativo</div>
+</div>
+<div class="gal-item">
+<div class="gal-ph">
+<svg class="gal-ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(240,237,230,0.8)" stroke-width="1" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="rgba(240,237,230,0.8)"/><path d="M21 15l-5-5L5 21"/></svg>
+<span class="gal-lbl">Tampa do Motor<br>Fibra de Carbono</span>
+</div>
+<div class="gal-ov">Detalhe · Tampa V12 em Carbono Exposto</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ CTA -->
+<section class="s-cta" data-screen-label="Configure o Seu">
+<div class="cta-in">
+<h2 class="cta-ti">Configure<br>o <span class="ac">Seu.</span></h2>
+<p class="cta-bd">88 unidades numeradas. Cada GX-12 é construído sob encomenda, com especificações exclusivas do proprietário. Os primeiros pedidos garantem prioridade de entrega e acesso ao programa Velocci Atelier.</p>
+<div class="cta-acts">
+<button class="btn-p">Solicitar Configuração</button>
+<button class="btn-g">Localizar Concessionária</button>
+</div>
+<p class="cta-note">Prazo estimado de entrega: 18–24 meses · Depósito de reserva: €150.000</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ FOOTER -->
+<footer class="footer" data-screen-label="Footer">
+<div class="ft-top">
+<div>
+<span class="ft-logo">VELOCCI</span>
+<span class="ft-sl">Engenharia Italiana Sem Limites</span>
+</div>
+<div class="ft-links">
+<div class="ft-col">
+<p class="ft-col-ti">O Carro</p>
+<ul>
+<li><a href="#">GX-12 Corsa</a></li>
+<li><a href="#">Performance</a></li>
+<li><a href="#">Tecnologia</a></li>
+<li><a href="#">Galeria</a></li>
+</ul>
+</div>
+<div class="ft-col">
+<p class="ft-col-ti">Experiência</p>
+<ul>
+<li><a href="#">Configurador</a></li>
+<li><a href="#">Test Drive</a></li>
+<li><a href="#">Velocci Atelier</a></li>
+<li><a href="#">Concessionárias</a></li>
+</ul>
+</div>
+<div class="ft-col">
+<p class="ft-col-ti">Empresa</p>
+<ul>
+<li><a href="#">Nossa História</a></li>
+<li><a href="#">Imprensa</a></li>
+<li><a href="#">Sustentabilidade</a></li>
+<li><a href="#">Contato</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="ft-bot">
+<span class="ft-copy">© 2026 VELOCCI S.p.A. — Todos os direitos reservados. Maranello Moderna, Itália.</span>
+<div class="ft-legal">
+<a href="#">Privacidade</a>
+<a href="#">Termos</a>
+<a href="#">Cookies</a>
+</div>
+</div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900},
+  &quot;accentColor&quot;: {
+    &quot;editor&quot;: &quot;color&quot;,
+    &quot;default&quot;: &quot;#C8922A&quot;,
+    &quot;options&quot;: [&quot;#C8922A&quot;, &quot;#D42B2B&quot;, &quot;#E8A020&quot;],
+    &quot;section&quot;: &quot;Marca&quot;
+  },
+  &quot;limitedUnits&quot;: {
+    &quot;editor&quot;: &quot;int&quot;,
+    &quot;default&quot;: 88,
+    &quot;min&quot;: 1,
+    &quot;max&quot;: 500,
+    &quot;section&quot;: &quot;Marca&quot;
+  },
+  &quot;taglineModel&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;GX-12 Corsa&quot;,
+    &quot;section&quot;: &quot;Marca&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    // Car profile SVG — parametrized prefix prevents duplicate-ID conflicts when reused across frames
+    const car = (p) => ({__html:`<svg viewBox="0 0 1000 285" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block;overflow:visible"><defs><linearGradient id="${p}bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e2e2e"/><stop offset="42%" stop-color="#1a1a1a"/><stop offset="100%" stop-color="#0c0c0c"/></linearGradient><filter id="${p}ds" x="-6%" y="-12%" width="112%" height="145%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="rgba(0,0,0,0.88)"/></filter></defs><ellipse cx="502" cy="272" rx="432" ry="9" fill="rgba(0,0,0,0.55)"/><path d="M65,262 L35,250 L52,226 L65,210 L78,192 L90,178 L148,158 L275,144 L318,100 L372,76 L490,64 L548,72 L570,90 L604,108 L642,103 L682,68 L708,100 L736,110 L764,118 L808,132 L848,162 L868,196 L896,234 L940,252 L958,262 L840,262 Q770,194 700,262 L296,262 Q230,200 164,262 Z" fill="url(#${p}bg)" filter="url(#${p}ds)"/><path d="M90,178 L148,158 L275,144 L318,100" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" stroke-linecap="round"/><path d="M764,118 L808,132 L848,162" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/><path d="M400,128 L570,118 L604,108" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/><path d="M316,142 L340,100 L374,78 L488,67 L544,74 L568,90 L552,142 Z" fill="#0d0d0d" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><path d="M342,101 L376,80 L428,71 L416,100 Z" fill="rgba(255,255,255,0.045)"/><path d="M318,100 L372,76" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><path d="M65,212 L88,203 L118,202 L124,211 L92,220 Z" fill="#060606"/><path d="M68,210 L90,204 L116,203 L120,210 L94,218 Z" fill="none" stroke="rgba(200,146,42,0.78)" stroke-width="0.8"/><path d="M72,207 L113,207" fill="none" stroke="rgba(200,146,42,0.52)" stroke-width="0.7" stroke-linecap="round"/><path d="M642,103 L682,68 L708,100 L736,110 L714,103 L690,86 L666,104 Z" fill="#1c1c1c" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><path d="M848,163 L866,195" fill="none" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round" opacity="0.92"/><path d="M848,163 L866,195" fill="none" stroke="#C8922A" stroke-width="9" opacity="0.1"/><circle cx="230" cy="258" r="54" fill="#0a0a0a" stroke="#232323" stroke-width="2"/><circle cx="230" cy="258" r="42" fill="#0f0f0f" stroke="#2c2c2c" stroke-width="1"/><g stroke="#393939" stroke-width="4" stroke-linecap="round"><line x1="230" y1="245" x2="230" y2="216"/><line x1="242" y1="254" x2="270" y2="243"/><line x1="238" y1="268" x2="255" y2="292"/><line x1="222" y1="268" x2="205" y2="292"/><line x1="218" y1="254" x2="190" y2="243"/></g><circle cx="230" cy="258" r="13" fill="#1a1a1a" stroke="#2e2e2e" stroke-width="1"/><rect x="208" y="248" width="11" height="6" rx="1" fill="rgba(200,146,42,0.38)"/><circle cx="770" cy="258" r="60" fill="#0a0a0a" stroke="#232323" stroke-width="2"/><circle cx="770" cy="258" r="46" fill="#0f0f0f" stroke="#2c2c2c" stroke-width="1"/><g stroke="#393939" stroke-width="4.5" stroke-linecap="round"><line x1="770" y1="245" x2="770" y2="212"/><line x1="785" y1="254" x2="816" y2="243"/><line x1="779" y1="268" x2="798" y2="294"/><line x1="761" y1="268" x2="742" y2="294"/><line x1="755" y1="254" x2="724" y2="243"/></g><circle cx="770" cy="258" r="15" fill="#1a1a1a" stroke="#2e2e2e" stroke-width="1"/><rect x="747" y="248" width="13" height="7" rx="1" fill="rgba(200,146,42,0.28)"/><path d="M65,267 L958,267 L940,280 L83,280 Z" fill="rgba(255,255,255,0.013)"/><ellipse cx="502" cy="270" rx="380" ry="5" fill="rgba(200,146,42,0.04)"/></svg>`});
+
+    const wheel = {__html:`<svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block"><defs><radialGradient id="wh-r" cx="38%" cy="32%" r="65%"><stop offset="0%" stop-color="#5e5e5e"/><stop offset="38%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#0d0d0d"/></radialGradient><radialGradient id="wh-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(200,146,42,0.06)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs><circle cx="300" cy="300" r="292" fill="url(#wh-g)"/><circle cx="300" cy="300" r="268" fill="#090909" stroke="#1c1c1c" stroke-width="3"/><circle cx="300" cy="300" r="264" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="6"/><circle cx="300" cy="300" r="255" fill="none" stroke="rgba(255,255,255,0.018)" stroke-width="2"/><circle cx="300" cy="300" r="245" fill="none" stroke="rgba(255,255,255,0.012)" stroke-width="1"/><circle cx="300" cy="300" r="202" fill="url(#wh-r)" stroke="#383838" stroke-width="2.5"/><g stroke="rgba(255,255,255,0.06)" stroke-width="1"><line x1="300" y1="102" x2="300" y2="165"/><line x1="478" y1="204" x2="430" y2="245"/><line x1="412" y1="454" x2="375" y2="415"/><line x1="188" y1="454" x2="225" y2="415"/><line x1="122" y1="204" x2="170" y2="245"/></g><polygon transform="rotate(0,300,300)" points="292,140 308,140 318,280 300,298 282,280" fill="#282828"/><polygon transform="rotate(72,300,300)" points="292,140 308,140 318,280 300,298 282,280" fill="#282828"/><polygon transform="rotate(144,300,300)" points="292,140 308,140 318,280 300,298 282,280" fill="#282828"/><polygon transform="rotate(216,300,300)" points="292,140 308,140 318,280 300,298 282,280" fill="#282828"/><polygon transform="rotate(288,300,300)" points="292,140 308,140 318,280 300,298 282,280" fill="#282828"/><polygon transform="rotate(0,300,300)" points="296,148 304,148 312,277 300,294 288,277" fill="#333"/><polygon transform="rotate(72,300,300)" points="296,148 304,148 312,277 300,294 288,277" fill="#333"/><polygon transform="rotate(144,300,300)" points="296,148 304,148 312,277 300,294 288,277" fill="#333"/><polygon transform="rotate(216,300,300)" points="296,148 304,148 312,277 300,294 288,277" fill="#333"/><polygon transform="rotate(288,300,300)" points="296,148 304,148 312,277 300,294 288,277" fill="#333"/><circle cx="300" cy="300" r="150" fill="none" stroke="#1c1c1c" stroke-width="15"/><circle cx="300" cy="300" r="150" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="11" stroke-dasharray="10,15"/><circle cx="300" cy="300" r="64" fill="#161616" stroke="#2c2c2c" stroke-width="2"/><circle cx="300" cy="300" r="29" fill="#1e1e1e" stroke="#343434" stroke-width="1.5"/><polygon points="300,283 313,311 287,311" fill="none" stroke="rgba(200,146,42,0.68)" stroke-width="1.5"/><rect x="160" y="265" width="52" height="26" rx="3" fill="#111" stroke="rgba(200,146,42,0.55)" stroke-width="1.5"/><rect x="166" y="271" width="40" height="14" rx="2" fill="rgba(200,146,42,0.18)"/><path d="M148,196 Q198,142 264,133" fill="none" stroke="rgba(255,255,255,0.11)" stroke-width="2" stroke-linecap="round"/></svg>`};
+
+    const engine = {__html:`<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block"><defs><linearGradient id="eg-m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c2c"/><stop offset="100%" stop-color="#141414"/></linearGradient><pattern id="eg-h" width="5" height="5" patternUnits="userSpaceOnUse"><line x1="0" y1="5" x2="5" y2="0" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/></pattern><radialGradient id="eg-gw" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(200,146,42,0.06)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs><rect width="900" height="500" fill="url(#eg-gw)"/><path d="M450,90 L450,420" stroke="rgba(200,146,42,0.12)" stroke-width="1" stroke-dasharray="6,7"/><g transform="rotate(-32,450,230)"><rect x="376" y="62" width="68" height="188" rx="6" fill="url(#eg-m)" stroke="#333" stroke-width="1.5"/><rect x="387" y="72" width="46" height="168" rx="3" fill="url(#eg-h)"/><line x1="387" y1="110" x2="433" y2="110" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><line x1="387" y1="133" x2="433" y2="133" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/><line x1="387" y1="156" x2="433" y2="156" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><line x1="387" y1="179" x2="433" y2="179" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/><line x1="387" y1="202" x2="433" y2="202" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><line x1="387" y1="225" x2="433" y2="225" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/></g><g transform="rotate(32,450,230)"><rect x="456" y="62" width="68" height="188" rx="6" fill="url(#eg-m)" stroke="#333" stroke-width="1.5"/><rect x="467" y="72" width="46" height="168" rx="3" fill="url(#eg-h)"/><line x1="467" y1="110" x2="513" y2="110" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><line x1="467" y1="133" x2="513" y2="133" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/><line x1="467" y1="156" x2="513" y2="156" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><line x1="467" y1="179" x2="513" y2="179" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/><line x1="467" y1="202" x2="513" y2="202" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><line x1="467" y1="225" x2="513" y2="225" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/></g><path d="M400,235 Q450,316 500,235" fill="#1e1e1e" stroke="#2e2e2e" stroke-width="2"/><path d="M400,235 Q450,270 500,235" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/><circle cx="268" cy="328" r="60" fill="#131313" stroke="#2c2c2c" stroke-width="2"/><circle cx="268" cy="328" r="42" fill="#0f0f0f" stroke="#252525" stroke-width="1"/><circle cx="268" cy="328" r="23" fill="#181818"/><g stroke="#2e2e2e" stroke-width="2.5" stroke-linecap="round"><line x1="268" y1="286" x2="268" y2="305"/><line x1="268" y1="351" x2="268" y2="370"/><line x1="226" y1="328" x2="245" y2="328"/><line x1="291" y1="328" x2="310" y2="328"/><line x1="239" y1="299" x2="252" y2="312"/><line x1="284" y1="344" x2="297" y2="357"/><line x1="297" y1="299" x2="284" y2="312"/><line x1="252" y1="344" x2="239" y2="357"/></g><path d="M328,326 Q364,326 378,302" fill="none" stroke="rgba(200,146,42,0.35)" stroke-width="2.5" stroke-linecap="round"/><circle cx="632" cy="328" r="60" fill="#131313" stroke="#2c2c2c" stroke-width="2"/><circle cx="632" cy="328" r="42" fill="#0f0f0f" stroke="#252525" stroke-width="1"/><circle cx="632" cy="328" r="23" fill="#181818"/><g stroke="#2e2e2e" stroke-width="2.5" stroke-linecap="round"><line x1="632" y1="286" x2="632" y2="305"/><line x1="632" y1="351" x2="632" y2="370"/><line x1="590" y1="328" x2="609" y2="328"/><line x1="655" y1="328" x2="674" y2="328"/><line x1="603" y1="299" x2="616" y2="312"/><line x1="648" y1="344" x2="661" y2="357"/><line x1="661" y1="299" x2="648" y2="312"/><line x1="616" y1="344" x2="603" y2="357"/></g><path d="M 522,302 Q 556,326 572,326" fill="none" stroke="rgba(200,146,42,0.35)" stroke-width="2.5" stroke-linecap="round"/><rect x="356" y="400" width="188" height="36" rx="4" fill="#131313" stroke="#252525" stroke-width="1.5"/><rect x="367" y="407" width="166" height="22" rx="2" fill="url(#eg-h)"/><g stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round"><path d="M376,436 Q346,456 326,477"/><path d="M396,436 Q362,460 340,480"/><path d="M524,436 Q554,456 574,477"/><path d="M544,436 Q562,460 582,480"/></g><path d="M326,477 L316,494" stroke="rgba(200,146,42,0.22)" stroke-width="4" stroke-linecap="round"/><path d="M574,477 L584,494" stroke="rgba(200,146,42,0.22)" stroke-width="4" stroke-linecap="round"/><text x="450" y="468" font-family="'DM Mono',monospace" font-size="9.5" fill="rgba(200,146,42,0.42)" text-anchor="middle" letter-spacing="4">V12 BITURBO · 6.5L · 1.200 CV</text></svg>`};
+
+    const interior = {__html:`<svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block"><defs><linearGradient id="it-d" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#202020"/><stop offset="100%" stop-color="#0d0d0d"/></linearGradient><radialGradient id="it-w" cx="50%" cy="100%" r="55%"><stop offset="0%" stop-color="rgba(200,146,42,0.05)"/><stop offset="100%" stop-color="transparent"/></radialGradient><pattern id="it-cf" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="2" x2="4" y2="2" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/></pattern></defs><rect width="900" height="560" fill="url(#it-w)"/><path d="M0,425 Q450,228 900,425 L900,560 L0,560 Z" fill="url(#it-d)"/><path d="M0,425 Q450,242 900,425" fill="none" stroke="#282828" stroke-width="1.5"/><path d="M0,425 Q450,256 900,425 L900,462 Q450,275 0,462 Z" fill="url(#it-cf)"/><rect x="102" y="310" width="198" height="120" rx="8" fill="#0b0b0b" stroke="#222" stroke-width="1.5"/><path d="M142,408 A 64,64 0 0,1 262,408" fill="none" stroke="#1c1c1c" stroke-width="8"/><path d="M142,408 A 64,64 0 0,1 228,346" fill="none" stroke="rgba(200,146,42,0.82)" stroke-width="3" stroke-linecap="round"/><text x="202" y="395" font-family="'DM Mono',monospace" font-size="27" fill="rgba(200,146,42,0.92)" text-anchor="middle">285</text><text x="202" y="413" font-family="'DM Mono',monospace" font-size="8" fill="rgba(255,255,255,0.27)" text-anchor="middle" letter-spacing="2">KM/H</text><rect x="113" y="318" width="177" height="4" rx="2" fill="#1a1a1a"/><rect x="113" y="318" width="132" height="4" rx="2" fill="rgba(200,146,42,0.72)"/><rect x="344" y="258" width="212" height="152" rx="10" fill="#0b0b0b" stroke="#222" stroke-width="1.5"/><line x1="354" y1="274" x2="546" y2="274" stroke="rgba(255,255,255,0.04)" stroke-width="1"/><line x1="354" y1="290" x2="546" y2="290" stroke="rgba(255,255,255,0.03)" stroke-width="1"/><line x1="354" y1="306" x2="546" y2="306" stroke="rgba(255,255,255,0.04)" stroke-width="1"/><line x1="375" y1="260" x2="375" y2="402" stroke="rgba(255,255,255,0.03)" stroke-width="1"/><line x1="408" y1="260" x2="408" y2="402" stroke="rgba(255,255,255,0.03)" stroke-width="1"/><line x1="441" y1="260" x2="441" y2="402" stroke="rgba(255,255,255,0.03)" stroke-width="1"/><line x1="474" y1="260" x2="474" y2="402" stroke="rgba(255,255,255,0.03)" stroke-width="1"/><line x1="507" y1="260" x2="507" y2="402" stroke="rgba(255,255,255,0.03)" stroke-width="1"/><path d="M375,385 L392,345 L420,300 L452,275 L494,272 L530,280" fill="none" stroke="rgba(200,146,42,0.52)" stroke-width="2" stroke-linecap="round"/><circle cx="452" cy="275" r="5" fill="#C8922A" opacity="0.82"/><text x="450" y="398" font-family="'DM Mono',monospace" font-size="8" fill="rgba(255,255,255,0.17)" text-anchor="middle" letter-spacing="2">VELOCCI CONNECT</text><rect x="600" y="310" width="198" height="120" rx="8" fill="#0b0b0b" stroke="#222" stroke-width="1.5"/><path d="M640,408 A 64,64 0 0,1 760,408" fill="none" stroke="#1c1c1c" stroke-width="8"/><path d="M640,408 A 64,64 0 0,1 728,343" fill="none" stroke="rgba(200,146,42,0.65)" stroke-width="3" stroke-linecap="round"/><text x="700" y="395" font-family="'DM Mono',monospace" font-size="27" fill="rgba(200,146,42,0.92)" text-anchor="middle">6400</text><text x="700" y="413" font-family="'DM Mono',monospace" font-size="8" fill="rgba(255,255,255,0.27)" text-anchor="middle" letter-spacing="2">RPM</text><circle cx="450" cy="340" r="158" fill="none" stroke="#2c2c2c" stroke-width="20"/><circle cx="450" cy="340" r="158" fill="none" stroke="#363636" stroke-width="15"/><line x1="450" y1="182" x2="450" y2="322" stroke="#222" stroke-width="22" stroke-linecap="round"/><line x1="313" y1="417" x2="382" y2="356" stroke="#222" stroke-width="22" stroke-linecap="round"/><line x1="587" y1="417" x2="518" y2="356" stroke="#222" stroke-width="22" stroke-linecap="round"/><circle cx="450" cy="340" r="40" fill="#181818" stroke="#282828" stroke-width="2"/><polygon points="450,322 464,352 436,352" fill="none" stroke="rgba(200,146,42,0.68)" stroke-width="1.5"/><path d="M194,358 Q174,340 170,324 L170,302 Q170,285 192,282 L230,280 L240,302 L220,316 Z" fill="#1c1c1c" stroke="#2c2c2c" stroke-width="1.5"/><path d="M706,358 Q726,340 730,324 L730,302 Q730,285 708,282 L670,280 L660,302 L680,316 Z" fill="#1c1c1c" stroke="#2c2c2c" stroke-width="1.5"/><path d="M382,184 Q344,192 314,210" fill="none" stroke="rgba(200,146,42,0.1)" stroke-width="5" stroke-linecap="round"/></svg>`};
+
+    return {
+      carF1: car('f1'),
+      carF2: car('f2'),
+      carF6: car('f6'),
+      wheel,
+      engine,
+      interior
+    };
+  }
+}
+</script>
+</body>
+</html>
